@@ -1,0 +1,20 @@
+{
+  "name": "hw1",
+  "version": "1.0.0",
+  "description": "mi hw-nada-goit-1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "start:dev": "nodemon ./index.js localhost 8080"
+  },
+  "author": "DimovSerhii",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "uid": "^2.0.1",
+    "yargs": "^17.6.0"
+  }
+}
