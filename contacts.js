@@ -49,7 +49,11 @@ function addContact(name, email, phone) {
     email,
     phone,
   };
+
   const adding = (contacts) => {
+    if (!name || !email || !phone) {
+      throw "Not completed by the obligation parameters: name, email, phone ";
+    }
     contacts.push(contactToAdd);
     data = JSON.stringify(contacts);
     fs.writeFile(contactsPath, data, "utf-8");
