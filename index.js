@@ -7,22 +7,46 @@ const {
   addContact,
 } = require("./contacts");
 
-function invokeAction({ action, id, name, email, phone }) {
+async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case "list":
-      listContacts();
+      try {
+        const response = await listContacts();
+        console.log("🚀 ~ listContacts: ", response);
+      } catch (error) {
+        const msg = new Error("Cannot conect to BD");
+        console.log(msg.message);
+      }
+
       break;
 
     case "get":
-      getContactById(id);
+      try {
+        const contact = await getContactById(id);
+        console.log(`🚀 ~ contact whith id "${id}": `, contact);
+      } catch (error) {
+        console.log("🚀 ~ error:", error.message);
+      }
+
       break;
 
     case "add":
-      addContact(name, email, phone);
+      try {
+        const contact = await addContact(name, email, phone);
+        console.log(`🚀 ~ Sucsess added "${contact.id}:"`, contact);
+      } catch (error) {
+        console.log("🚀 ~ error:", error.message);
+      }
+
       break;
 
     case "remove":
-      removeContact(id);
+      try {
+        const response = await removeContact(id);
+        console.log(`🚀 ~ removeContact whith id "${id}": `, response);
+      } catch (error) {
+        console.log("🚀 ~ error:", error.message);
+      }
       break;
 
     default:
