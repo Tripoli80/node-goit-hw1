@@ -39,6 +39,7 @@ async function getContactById(contactId) {
 
 async function removeContact(contactId) {
   try {
+
     const contacts = await read();
     const newContacts = contacts.reduce((acc, item) => {
       if (item.id !== `${contactId}`) {
@@ -51,9 +52,12 @@ async function removeContact(contactId) {
       const msg = new Error(`No Contact whith id ${contactId} to remove`);
       throw msg;
     }
+    const contactToRemove = await getContactById(contactId);
+
+
     const data = JSON.stringify(newContacts);
     await fs.writeFile(contactsPath, data, "utf-8");
-    return `Sucsess remove contact by id ${contactId}`;
+    return contactToRemove;
   } catch (error) {
     throw error;
   }
