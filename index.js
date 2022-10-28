@@ -14,7 +14,7 @@ async function invokeAction({ action, id, name, email, phone }) {
         const response = await listContacts();
         console.log("ListContacts: ", response);
       } catch (error) {
-        console.warn("\x1B[31m",error);
+        console.warn("\x1B[31m", error);
       }
 
       break;
@@ -45,7 +45,9 @@ async function invokeAction({ action, id, name, email, phone }) {
     case "remove":
       try {
         const response = await removeContact(id);
-        console.log(response);
+        response
+          ? console.log(response)
+          : console.log(`"Contact with id "${id}": not find"`);
       } catch (error) {
         console.warn("\x1B[31m", error);
       }
