@@ -4,34 +4,21 @@ const { uid } = require("uid");
 
 const contactsPath = path.resolve("./db/contacts.json");
 
-const read = async () => {
+const listContacts = async () => {
   try {
     const contacts = await fs.readFile(contactsPath, "utf-8");
     return JSON.parse(contacts);
   } catch (error) {
-    const msg = new Error("Cannot conect to BD");
-    throw msg;
+    throw error;
   }
 };
 
-async function listContacts() {
-  try {
-    const data = await read();
-    return data;
-  } catch (error) {
-    throw "";
-  }
-}
-
 async function getContactById(contactId) {
   try {
-    const contacts = await read();
-    const contact = contacts.filter(({ id }) => id === `${contactId}`)[0];
-    if (!contact) {
-      const msg = new Error(`Can't find contact whith id "${contactId}"`);
-      throw msg;
-    }
-    return contact;
+    const idStr =contactId.toString()
+    const contacts = await listContacts();
+    const contact = contacts.find(({ id }) => id === idStr);
+    return contact ? contact : 0;
   } catch (error) {
     throw error;
   }
@@ -39,25 +26,19 @@ async function getContactById(contactId) {
 
 async function removeContact(contactId) {
   try {
+    const idStr =contactId.toString()
 
-    const contacts = await read();
-    const newContacts = contacts.reduce((acc, item) => {
-      if (item.id !== `${contactId}`) {
-        return [...acc, item];
-      }
-      return acc;
-    }, []);
-
-    if (newContacts.length === contacts.length) {
-      const msg = new Error(`No Contact whith id ${contactId} to remove`);
-      throw msg;
+    const contacts = await listContacts();
+    const index = contacts.findIndex(({ id }) => {
+      return id === idStr;
+    });
+    if (index === -1) {
+      return `No Contact whith id ${contactId} to remove`;
     }
-    const contactToRemove = await getContactById(contactId);
-
-
-    const data = JSON.stringify(newContacts);
+    const removedContacts = contacts.splice(index, 1);
+    const data = JSON.stringify(contacts);
     await fs.writeFile(contactsPath, data, "utf-8");
-    return contactToRemove;
+    return removedContacts[0];
   } catch (error) {
     throw error;
   }
@@ -65,21 +46,19 @@ async function removeContact(contactId) {
 
 async function addContact(name, email, phone) {
   try {
+    if (!name || !email || !phone) {
+      return `Not completed by the obligation parameters: name, email, phone`;
+    }
     const contactToAdd = {
       id: uid(),
       name,
       email,
       phone,
     };
-    if (!name || !email || !phone) {
-      const msg = new Error(
-        `Not completed by the obligation parameters: name, email, phone`
-      );
-      throw msg;
-    }
-    const contacts = await read();
-    const updateContacts = [...contacts, contactToAdd];
-    const data = JSON.stringify(updateContacts);
+
+    const contacts = await listContacts();
+    contacts.push(contactToAdd);
+    const data = JSON.stringify(contacts);
     await fs.writeFile(contactsPath, data, "utf-8");
     return contactToAdd;
   } catch (error) {

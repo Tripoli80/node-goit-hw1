@@ -12,10 +12,9 @@ async function invokeAction({ action, id, name, email, phone }) {
     case "list":
       try {
         const response = await listContacts();
-        console.log("🚀 ~ listContacts: ", response);
+        console.log("ListContacts: ", response);
       } catch (error) {
-        const msg = new Error("Cannot conect to BD");
-        console.log(msg.message);
+        console.warn("\x1B[31m",error);
       }
 
       break;
@@ -23,9 +22,12 @@ async function invokeAction({ action, id, name, email, phone }) {
     case "get":
       try {
         const contact = await getContactById(id);
-        console.log(`🚀 ~ contact whith id "${id}": `, contact);
+
+        contact
+          ? console.log(`Contact with id "${id}": `, contact)
+          : console.log(`"Contact with id "${id}": not find"`);
       } catch (error) {
-        console.log("🚀 ~ error:", error.message);
+        console.log("\x1B[31m", error);
       }
 
       break;
@@ -33,9 +35,9 @@ async function invokeAction({ action, id, name, email, phone }) {
     case "add":
       try {
         const contact = await addContact(name, email, phone);
-        console.log(`🚀 ~ Sucsess added "${contact.id}:"`, contact);
+        console.log(`Result: `, contact);
       } catch (error) {
-        console.log("🚀 ~ error:", error.message);
+        console.warn("\x1B[31m", error);
       }
 
       break;
@@ -43,9 +45,9 @@ async function invokeAction({ action, id, name, email, phone }) {
     case "remove":
       try {
         const response = await removeContact(id);
-        console.log(`🚀 ~ removeContact whith id "${id}": `, response);
+        console.log(response);
       } catch (error) {
-        console.log("🚀 ~ error:", error.message);
+        console.warn("\x1B[31m", error);
       }
       break;
 
